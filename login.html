@@ -1,0 +1,44 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script>
+        function buttonPressed() {
+            var userid = document.getElementById('tf1').value;
+            var password = document.getElementById('tf2').value;
+            var sql = 'show tables';
+            var query = {
+                db: 'creco18',
+                userid: userid,
+                password: password,
+                sql: sql
+            };
+            $.post('http://dbkiso.si.aoyama.ac.jp/jsonapi/', query, function (data, textStatus) {
+                var objects = JSON.parse(data);
+                if (objects.result && objects.result === 'fail') {
+                    window.alert('login failed');
+                } else {
+                    window.location.href = "file:///Users/t.satoshi/seminar2018fall/twitter.html";
+                }
+            });
+        }
+    </script>
+</head>
+
+<body>
+    <h2>
+        ログイン
+    </h2>
+    <input id="tf1" type="textfield">ログインID
+    <br>
+    <input id="tf2" type="password">パスワード
+    <br>
+    <button onclick="buttonPressed()">ログイン</button>
+    <hr>
+    <p id="result"></p>
+
+</body>
+
+</html>
