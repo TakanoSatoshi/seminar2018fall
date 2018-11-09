@@ -20,7 +20,11 @@
                 if (objects.result && objects.result === 'fail') {
                     window.alert('login failed');
                 } else {
-                    window.location.href = "file:///Users/t.satoshi/seminar2018fall/twitter.html";
+                    //ログインに成功した場合idとパスワードをローカルストレージに保存
+                    window.localStorage.setItem('userid', userid);
+                    window.localStorage.setItem('password', password);
+                    //ページ変更　これ自分のファイル内なら動くけど…? URL参照の方法
+                    window.location.href = "twitter.html";
                 }
             });
         }
@@ -28,9 +32,7 @@
 </head>
 
 <body>
-    <h2>
-        ログイン
-    </h2>
+    <h2>ログイン</h2>
     <input id="tf1" type="textfield">ログインID
     <br>
     <input id="tf2" type="password">パスワード

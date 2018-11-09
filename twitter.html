@@ -5,9 +5,16 @@
     <meta charset="utf-8">
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script>
+        //自動更新処理、2000ミリ秒でfunction display()を行う
+        var x = 0
+        var timer = setInterval(display, 2000)
+        $(window).on('load', function () {
+            x++;
+        })
         function buttonPressed() {
-            var userid = document.getElementById('tf1').value;
-            var password = document.getElementById('tf2').value;
+            //IDとパスワードをローカルストレージから呼び出し
+            var userid = window.localStorage.getItem('userid');
+            var password = window.localStorage.getItem('password');
             var tweet = document.getElementById('tf').value;
             var sql = 'insert into Tweets (name, tweet, time) values("' + userid + '","' + tweet + '",now());';
             var query = {
@@ -20,16 +27,41 @@
                 document.getElementById('result').innerHTML = data;
             });
         }
+        function display() {
+            //IDとパスワードをローカルストレージから呼び出し
+            var userid = window.localStorage.getItem('userid');
+            var password = window.localStorage.getItem('password');
+
+            var sql = 'select * from Tweets order by time desc';
+            var query = {
+                db: 'creco18',
+                userid: userid,
+                password: password,
+                sql: sql
+            };
+            $.post('http://dbkiso.si.aoyama.ac.jp/jsonapi/', query, function (data, textStatus) {
+                var objects = JSON.parse(data);
+                var str = '<table border="1">'
+                var len = objects.length;
+                for (var i = 0; i < len; i++) {
+                    str += '<tr>';
+                    str += '<td>' + objects[i].name + '</td>';
+                    str += '<td>' + objects[i].tweet + '</td>';
+                    str += '<td>' + objects[i].time + '</td>';
+                    str += '</tr>';
+                }
+                str += '</table>';
+                //表を表示する
+                document.getElementById('result').innerHTML = str;
+            });
+        }
+
     </script>
 </head>
 
 <body>
-    version 1.0
-    <h1>まいついったー</h1>
-    <input id="tf1" type="textfield">ログインID
-    <br>
-    <input id="tf2" type="password">パスワード
-    <br>
+    version 2.0
+    <h1>My Twitter</h1>
     <input id="tf" type="textfield">
     <button onclick="buttonPressed()">tweet</button>
     <hr>
